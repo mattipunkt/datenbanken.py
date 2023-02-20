@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os, sys, sqlite3
 import lib.functions as func
 import logging                      # Zum Loggen
@@ -9,7 +10,8 @@ logging.basicConfig(filename="newfile.log",
 
 
 # Als erstes überprüfen, ob eine genannte Datenbank bereits existiert
-if os.path.exists("schüler.db"):
+if os.path.exists("schueler.db"):
     print("Datei bereits vorhanden")
     sys.exit(0)
     
+connection = sqlite3.connect("schueler.db")
