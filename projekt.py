@@ -52,9 +52,11 @@ def createtable():
 
 
 
-def addmovie():
-
-    sql = 'INSERT INTO filme VALUES(01, "Die Verurteilten", "Tim Robbins", 130, "Frank Darabont", 9.6, "Netflix", "Thriller")'
+def addmovie(name, darsteller, laenge, regisseur, rating, streaming, genre):
+    cursor.execute("SELECT MAX(id) from filme")
+    oldid = cursor.fetchone()
+    print(oldid)
+    sql = 'INSERT INTO filme VALUES(' + name + '", "' + darsteller + '", ' + laenge + ', "' + regisseur + '", ' + rating + ', "' + streaming + '", "' + genre + '")'
     cursor.execute(sql)
     connection.commit()
     connection.close()
@@ -75,6 +77,6 @@ logger.info("Erfolg! Verbunden mit der DatenbanK")
 print("Verbunden mit der Datenbank")
 print("SQLite3 Version: " + sqlite3.version)
 cursor = connection.cursor()  # Zum erstellen von Sachen
-addmovie()
+addmovie("Der Pate", "Marlon Brando", 200, "Francis Ford Coppola", 9.7, "Prime Video", "Mafia")
 
 print(time.time())
