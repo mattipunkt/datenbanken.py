@@ -59,6 +59,7 @@ def addmovie(title, cast, length, director, rating, streaming, genre):
     cursor.execute(sql)
     connection.commit()
     connection.close()
+    print("Film {} erfolgreich hinzugefügt!".format(title))
     return
 
 # Als erstes überprüfen, ob eine genannte Datenbank bereits existiert
@@ -76,6 +77,15 @@ logger.info("Erfolg! Verbunden mit der DatenbanK")
 print("Verbunden mit der Datenbank")
 print("SQLite3 Version: " + sqlite3.version)
 cursor = connection.cursor()  # Zum erstellen von Sachen
-addmovie('Pate', 'Brando', 200, 'Coppola', 9.7, 'PrimeVideo', 'Mafia')
+
+print("Film hinzufügen!")
+filmip = input("Name des Filmes: ")
+actorip = input("Schauspieler: ")
+laengeip = input("Länge: ")
+regisseurip = input("Regisseur: ")
+bewertungip = input("Bewertung (0 bis 10 inkl. Nachkommastellen: ")
+streamingverfeugbarip = input("Verfügbar bei: ")
+genreip = input("Genre: ")
+addmovie(filmip, actorip, laengeip, regisseurip, bewertungip, streamingverfeugbarip, genreip)
 
 print(time.time())
