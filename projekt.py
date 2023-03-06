@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os, sqlite3
-
+from beautifultable import BeautifulTable
 import logging                      # Zum Loggen
 from pathlib import Path            # zum erstellen der Datenbank
 import time
@@ -71,6 +71,51 @@ else:
     createtable()
 
 
+
+def searchmovie():
+    print("Wonach soll gesucht werden?:")
+    print("1 = Titel\n" 
+          "2 = Regisseur\n"
+          "3 = Schauspieler:in\n"
+          "4 = Streaming-Dienst")
+    selec = input("Suchauswahl: ")
+    if selec == "1":
+        search = "titel"
+        request = input("Titel eingeben: ")
+    elif selec == "2":
+        search = "regisseur"
+        request = input("Name des Regisseur: ")
+    elif selec == "3":
+        search = "schauspieler"
+        request = input("Name des Schauspielers: ")
+    elif selec == "4":
+        search = "verfuegbarkeit"
+        request = input("Name des Dienstes auswählen: ")
+    else:
+        print("Fehler! Kehre zum Hauptmenü zurück")
+        main()
+    sql = 'SELECT * FROM filme WHERE "{}" = "{}"'.format(search,request)
+    cursor.execute(sql)
+    headers = 'PRAGMA table_info(filme)'
+    cursor.execute(headers)
+    header = cursor.fetchall
+    print(header)
+    rows = cursor.fetchall()
+    table = BeautifulTable()
+    table.set_style(BeautifulTable.STYLE_DOTTED)
+    table.columns.header = ["name", "rank", "gender"]
+
+    for row in rows:
+        print(row)
+
+
+
+
+
+
+
+
+
 def main():
     print("Aktionsmöglichkeiten:")
     print("a - Film hinzufügen,   d - Film löschen,    l - Filme anzeigen,     s - Film suchen")
@@ -93,6 +138,7 @@ def main():
         print("tbc")
     elif selection == "s":
         print("Film suchen!")
+        searchmovie()
     else:
         print("Fehler! Falsche Eingabe.")
         main()
