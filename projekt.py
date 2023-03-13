@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import os, sqlite3
-from beautifultable import BeautifulTable
 import logging                      # Zum Loggen
 from pathlib import Path            # zum erstellen der Datenbank
 import time
+from prettytable import from_db_cursor
+
 
 # Logger zur Detaillierten Aufzeichnung, in Vorbereitung auf die einfachere Verwendung des GUIs, vielleicht später py2exe um eine einfache exe-Datei für Windows bereit zustellen.
 logging.basicConfig(filename="dblog %s.log" %time.time(),
@@ -60,7 +61,26 @@ def addmovie(title, cast, length, director, rating, streaming, genre):
 
 
 def deletemovie():
-    sql = ''
+    print("Film soll gelöscht werden!")
+    print("Um einen Film zu löschen, musst du den Titel des Films eingeben.")
+    deleterequest = input("Titel des Films: ")
+    suchesql = 'SELECT * FROM filme WHERE titel LIKE "%{}%"'.format(deleterequest)
+    cursor.execute(suchesql)
+    print("Folgende Einträge werden gelöscht:")
+    output = from_db_cursor(cursor)
+    print(output)
+    print("Bist du dir sicher, dass du diese Einträge löschen willst?")
+    confirm = input("Löschen bestätigen (y/N): ")
+    if confirm == "n" or confirm == "N" or confirm == "":
+        print("Löschen abgebrochen! Die Datenbank wurde nicht verändert.")
+        print("Kehre zum Hauptmenü zurück.")
+        main()
+    elif confirm == "y" or confirm == "Y":
+        deletesql = 'DELETE FROM filme WHERE titel LIKE "%{}%"'.format(deleterequest)
+        cursor.execute(deletesql)
+        print("Der Film wurde gelöscht!")
+        print("Kehre zum Hauptmenü zurück. ")
+        main()
 
 # Als erstes überprüfen, ob eine genannte Datenbank bereits existiert
 logger.warning("Versuche Datenbank zu erstellen")
@@ -94,25 +114,21 @@ def searchmovie():
     else:
         print("Fehler! Kehre zum Hauptmenü zurück")
         main()
-    sql = 'SELECT * FROM filme WHERE "{}" = "{}"'.format(search,request)
+
+    sql = 'SELECT titel, schauspieler, laenge, regisseur, bewertung_imdb, verfuegbarkeit, genre FROM filme WHERE "{}" LIKE "%{}%"'.format(search,request)
+#    sql = 'SELECT titel, schauspieler, laenge, regisseur, bewertung_imdb, verfuegbarkeit, genre FROM filme'
     cursor.execute(sql)
-    headers = 'PRAGMA table_info(filme)'
-    cursor.execute(headers)
-    header = cursor.fetchall
-    print(header)
-    rows = cursor.fetchall()
-    table = BeautifulTable()
-    table.set_style(BeautifulTable.STYLE_DOTTED)
-    table.columns.header = ["name", "rank", "gender"]
+    mytable = from_db_cursor(cursor)
+    print(mytable)
+    print("Kehre zum Hauptmenü zurück!")
+    main()
 
-    for row in rows:
-        print(row)
-
-
-
-
-
-
+def listmovies():
+    sql = 'SELECT titel, schauspieler, laenge, regisseur, bewertung_imdb, verfuegbarkeit, genre FROM filme'
+    cursor.execute(sql)
+    outputtable = from_db_cursor(cursor)
+    print(outputtable)
+    main()
 
 
 
@@ -132,10 +148,10 @@ def main():
         addmovie(filmip, actorip, laengeip, regisseurip, bewertungip, streamingverfeugbarip, genreip)
     elif selection == "d":
         print("Film löschen!")
-        print("TBC")
+        deletemovie()
     elif selection == "l":
         print("Filme anzeigen!")
-        print("tbc")
+        listmovies()
     elif selection == "s":
         print("Film suchen!")
         searchmovie()
