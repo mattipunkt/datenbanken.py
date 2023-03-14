@@ -5,8 +5,8 @@ from pathlib import Path            # zum erstellen der Datenbank
 import time
 from prettytable import from_db_cursor
 
-
-# Logger zur Detaillierten Aufzeichnung, in Vorbereitung auf die einfachere Verwendung des GUIs, vielleicht später py2exe um eine einfache exe-Datei für Windows bereit zustellen.
+# Logger zur Detaillierten Aufzeichnung, in Vorbereitung auf die einfachere Verwendung des GUIs,
+# vielleicht später py2exe um eine einfache exe-Datei für Windows bereit zustellen.
 logging.basicConfig(filename="dblog %s.log" %time.time(),
                     format='%(asctime)s %(message)s',
                     filemode='w')
@@ -25,7 +25,7 @@ def datenbankerstellen():
     print("Der Datenbankname wurde festgelegt auf: ",dbname)
     return
 
-def testtable():
+def testtable():    # Zum Test, ob eine Tabelle existiert.
     print('Tabellentest wird gestartet.')
     test = 'SELECT * from filme;'
     cursor.execute(test)
@@ -35,7 +35,7 @@ def testtable():
 
 
 
-def createtable():
+def createtable():      # Erstellt eine Tabelle
         myfile = Path('filme.db')
         myfile.touch(exist_ok=True)
         connection = sqlite3.connect("filme.db")  # Verbinde mit der Datenbank
@@ -78,6 +78,8 @@ def deletemovie():
     elif confirm == "y" or confirm == "Y":
         deletesql = 'DELETE FROM filme WHERE titel LIKE "%{}%"'.format(deleterequest)
         cursor.execute(deletesql)
+        connection.commit()
+        connection.close()
         print("Der Film wurde gelöscht!")
         print("Kehre zum Hauptmenü zurück. ")
         main()
@@ -169,6 +171,11 @@ cursor = connection.cursor()  # Zum erstellen von Sachen
 
 print('time: {}')
 print('Wilkommen in der Film-Datenbank!')
+
+
+
+##      AB HIER GUI
+
 main()
 
 
