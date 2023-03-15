@@ -1,7 +1,24 @@
-# Datenbanken in Python Projekt
+# Filmdatenbank in Python
 
-## Dokumentation
-Als erstes wird die Bibliothek zur Verwendung einer Datenbank importiert. Wir verwenden SQLite, weil wir somit ein gesamtes Datenbankinterface direkt in Pyhton eingebunden haben.
-```python
-import os, sys, sqlite3
-```
+## Installation
+Um das Projekt zu benutzen, gibt es zwei Möglichkeiten:
+
+1. Verwenden von setup.py
+Einfach in der Kommandozeile über "cd" in den Ordner des Projektes navigieren, dann folgenden Befehl ausführen:
+(Für diese Möglichkeit muss Python auf der Lokalen Festplatte installiert sein!)
+´´´
+python setup.py install 
+´´´
+
+Falls dieser Command nicht funktioniert und ein Fehler ausgespuckt wird, sobald man unser projekt.py starten will, bitte 2. Möglichkeit verwenden.
+
+2. Installieren des fehlenden Paketes über den Python-Paketmanager
+
+Hierfür in der Kommandozeile folgenden Befehl ausführen:
+´´´
+python -m pip install prettytable
+´´´
+
+Sobald dieses Paket installiert ist, kann unser Projekt verwendet werden.
+
+    
