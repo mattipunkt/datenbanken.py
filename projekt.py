@@ -2,12 +2,12 @@
 import os, sqlite3
 import logging                      # Zum Loggen
 from pathlib import Path            # zum erstellen der Datenbank
-import time
+import datetime
 from prettytable import from_db_cursor
 
 # Logger zur Detaillierten Aufzeichnung, in Vorbereitung auf die einfachere Verwendung des GUIs,
 # vielleicht später py2exe um eine einfache exe-Datei für Windows bereit zustellen.
-logging.basicConfig(filename="dblog %s.log" %time.time(),
+logging.basicConfig(filename="dblog.log",
                     format='%(asctime)s %(message)s',
                     filemode='w')
 
@@ -86,6 +86,7 @@ def deletemovie():
 
 # Als erstes überprüfen, ob eine genannte Datenbank bereits existiert
 logger.warning("Versuche Datenbank zu erstellen")
+print("Versuche die Datenbank zu erstellen...")
 if os.path.exists("filme.db"):
     print("Datei bereits vorhanden")
     logger.warning("Datei konnte nicht erstellt werden, da bereits vorhanden")
@@ -144,7 +145,7 @@ def main():
         actorip = input("Schauspieler: ")
         laengeip = input("Länge: ")
         regisseurip = input("Regisseur: ")
-        bewertungip = input("Bewertung (0 bis 10 inkl. Nachkommastellen: ")
+        bewertungip = input("Bewertung (0 bis 10 inkl. Nachkommastellen): ")
         streamingverfeugbarip = input("Verfügbar bei: ")
         genreip = input("Genre: ")
         addmovie(filmip, actorip, laengeip, regisseurip, bewertungip, streamingverfeugbarip, genreip)
@@ -165,17 +166,13 @@ def main():
 logger.info("Verbinde mit der Datenbank")
 connection = sqlite3.connect("filme.db")  # Verbinde mit der Datenbank
 logger.info("Erfolg! Verbunden mit der DatenbanK")
-print("Verbunden mit der Datenbank")
+print("Verbunden mit der Datenbank.")
 print("SQLite3 Version: " + sqlite3.version)
 cursor = connection.cursor()  # Zum erstellen von Sachen
 
-print('time: {}')
+print('Aktuelle Zeit: {}'.format(datetime.datetime.now()))
 print('Wilkommen in der Film-Datenbank!')
-
-
-
-##      AB HIER GUI
+logger.info("Starte Datenbank!")
+logger.info("SQLite3 Version: " + sqlite3.version)
 
 main()
-
-
