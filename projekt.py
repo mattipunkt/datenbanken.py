@@ -15,12 +15,12 @@ logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
 
-def pushtodb():
+def pushtodb():         # Funktion, um einfache Datenbank-Befehle direkt auszufuehren
     connection = sqlite3.connect("filme.db")  # Verbinde mit der Datenbank
     connection.commit()
     connection.close()
 
-def datenbankerstellen():
+def datenbankerstellen():   # Erstellt eine Datenbank, falls nicht vorhanden.
     dbname = input("Name der Datenbank: ")
     print("Der Datenbankname wurde festgelegt auf: ",dbname)
     return
@@ -37,7 +37,7 @@ def testtable():    # Zum Test, ob eine Tabelle existiert.
 
 def createtable():      # Erstellt eine Tabelle
         myfile = Path('filme.db')
-        myfile.touch(exist_ok=True)
+        myfile.touch(exist_ok=True)     # Prüft, ob die Datei filme.db wirklich existiert, um Fehler zu vermeiden.
         connection = sqlite3.connect("filme.db")  # Verbinde mit der Datenbank
         cursor = connection.cursor()
         sql = 'CREATE TABLE filme(id INTEGER PRIMARY KEY AUTOINCREMENT, titel TEXT, schauspieler TEXT, laenge INTEGER, regisseur TEXT, bewertung_imdb INTEGER, verfuegbarkeit TEXT, genre TEXT);'
@@ -48,19 +48,18 @@ def createtable():      # Erstellt eine Tabelle
 
 
 
-def addmovie(title, cast, length, director, rating, streaming, genre):
+def addmovie(title, cast, length, director, rating, streaming, genre):  # Funktion zum Erstellen von Filmen
     # sql = 'INSERT INTO filme VALUES(' + name + ', ' + darsteller + ', ' + laenge + ', "' + regisseur + '", ' + rating +
     # ', "' + streaming + '", "' + genre + '")'
     sql = 'INSERT INTO filme(titel, schauspieler, laenge, regisseur, bewertung_imdb, verfuegbarkeit, genre) VALUES ("{}","{}",{},"{}",{},"{}","{}")'.format(title,cast,length,director,rating,streaming,genre)
     cursor.execute(sql)
     connection.commit()
-    connection.close()
     print("Film {} erfolgreich hinzugefügt!".format(title))
     print("Kehre zurück zum Hauptmenü!")
     main()
 
 
-def deletemovie():
+def deletemovie():  # Film löschen
     print("Film soll gelöscht werden!")
     print("Um einen Film zu löschen, musst du den Titel des Films eingeben.")
     deleterequest = input("Titel des Films: ")
@@ -70,7 +69,7 @@ def deletemovie():
     output = from_db_cursor(cursor)
     print(output)
     print("Bist du dir sicher, dass du diese Einträge löschen willst?")
-    confirm = input("Löschen bestätigen (y/N): ")
+    confirm = input("Löschen bestätigen (y/N): ")           # Sicherheitsabfrage, bevor Datenbank manipuliert wird.
     if confirm == "n" or confirm == "N" or confirm == "":
         print("Löschen abgebrochen! Die Datenbank wurde nicht verändert.")
         print("Kehre zum Hauptmenü zurück.")
@@ -79,7 +78,6 @@ def deletemovie():
         deletesql = 'DELETE FROM filme WHERE titel LIKE "%{}%"'.format(deleterequest)
         cursor.execute(deletesql)
         connection.commit()
-        connection.close()
         print("Der Film wurde gelöscht!")
         print("Kehre zum Hauptmenü zurück. ")
         main()
@@ -95,23 +93,23 @@ else:
 
 
 
-def searchmovie():
+def searchmovie():  # Sucht Filme anhand verschiedener Attribute
     print("Wonach soll gesucht werden?:")
     print("1 = Titel\n" 
           "2 = Regisseur\n"
           "3 = Schauspieler:in\n"
           "4 = Streaming-Dienst")
     selec = input("Suchauswahl: ")
-    if selec == "1":
+    if selec == "1":            # Suche anhand des Titels
         search = "titel"
         request = input("Titel eingeben: ")
-    elif selec == "2":
+    elif selec == "2":          # SUche anhand des Regisseurs
         search = "regisseur"
         request = input("Name des Regisseur: ")
-    elif selec == "3":
+    elif selec == "3":          # Suche anhand  Schauspieler-Name
         search = "schauspieler"
         request = input("Name des Schauspielers: ")
-    elif selec == "4":
+    elif selec == "4":          # Suche nach Streaming Dienst, bspw. Zeige alle Filme, die es auf Netflix gibt.
         search = "verfuegbarkeit"
         request = input("Name des Dienstes auswählen: ")
     else:
@@ -121,7 +119,7 @@ def searchmovie():
     sql = 'SELECT titel, schauspieler, laenge, regisseur, bewertung_imdb, verfuegbarkeit, genre FROM filme WHERE "{}" LIKE "%{}%"'.format(search,request)
 #    sql = 'SELECT titel, schauspieler, laenge, regisseur, bewertung_imdb, verfuegbarkeit, genre FROM filme'
     cursor.execute(sql)
-    mytable = from_db_cursor(cursor)
+    mytable = from_db_cursor(cursor)    # Einfache Implementierung von Datenbank-Anzeige durch das Paket prettytable
     print(mytable)
     print("Kehre zum Hauptmenü zurück!")
     main()
@@ -135,7 +133,7 @@ def listmovies():
 
 
 
-def main():
+def main():     # Hauptmenü
     print("Aktionsmöglichkeiten:")
     print("a - Film hinzufügen,   d - Film löschen,    l - Filme anzeigen,     s - Film suchen")
     selection = input("Aktion wählen: ")
